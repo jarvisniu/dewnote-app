@@ -1,2 +1,2 @@
 # dewnote-app
-dewnote.com app client
+dewnote.com electron wrap

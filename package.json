@@ -1,9 +1,12 @@
 {
   "name": "dewnote-app",
+  "productName": "dewnote",
   "version": "1.0.0",
   "description": "dewnote.com electron wrap",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "electron src"
+    "dev": "electron src",
+    "build": "electron-packager . --overwrite --asar --out=dist"
   },
   "repository": {
     "type": "git",
@@ -21,6 +24,7 @@
   },
   "homepage": "https://github.com/jarvisniu/dewnote-app#readme",
   "devDependencies": {
-    "electron": "^4.0.0"
+    "electron": "^4.0.0",
+    "electron-packager": "^13.0.1"
   }
 }
