@@ -1,0 +1,26 @@
+{
+  "name": "dewnote-app",
+  "version": "1.0.0",
+  "description": "dewnote.com electron wrap",
+  "scripts": {
+    "dev": "electron src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jarvisniu/dewnote-app.git"
+  },
+  "keywords": [
+    "dewnote",
+    "electron",
+    "app"
+  ],
+  "author": "Jarvis Niu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jarvisniu/dewnote-app/issues"
+  },
+  "homepage": "https://github.com/jarvisniu/dewnote-app#readme",
+  "devDependencies": {
+    "electron": "^4.0.0"
+  }
+}
