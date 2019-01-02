@@ -1,4 +1,5 @@
 const {app, BrowserWindow} = require('electron')
+const os = require('os')
 
 let mainWindow
 
@@ -6,7 +7,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    icon: __dirname + '/logo.png'
+    icon: __dirname + os.platform === 'win32' ? '/logo.ico' : '/logo.png'
   })
   mainWindow.loadURL('http://dewnote.com')
   mainWindow.setMenu(null)

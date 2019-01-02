@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "electron src",
-    "build": "electron-packager . --overwrite --asar --out=dist"
+    "build": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.ico"
   },
   "repository": {
     "type": "git",
