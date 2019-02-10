@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "electron src",
     "build:win": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.ico",
-    "build:mac": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.icns"
+    "build:mac": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.icns",
+    "zip:mac": "ditto -c -k --sequesterRsrc --keepParent dist/Dewnote-darwin-x64/Dewnote.app dist/dewnote-mac.zip",
+    "zip:mac-too-large": "zip -r -5 dist/dewnote-mac.zip dist/Dewnote-darwin-x64/Dewnote.app"
   },
   "repository": {
     "type": "git",
