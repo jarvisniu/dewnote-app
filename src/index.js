@@ -1,11 +1,13 @@
 const {app, BrowserWindow, Menu} = require('electron')
 const os = require('os')
 
+const WINDOW_WIDTH = process.platform === 'darwin' ? 915 : 940
+
 let mainWindow
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
+    width: WINDOW_WIDTH,
     height: 600,
     icon: __dirname + os.platform === 'win32' ? '/logo.ico' : '/logo.png'
   })
@@ -44,9 +46,9 @@ function createWindow () {
 app.on('ready', createWindow)
 
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  // if (process.platform !== 'darwin') {
+  app.quit()
+  // }
 })
 
 app.on('activate', function () {

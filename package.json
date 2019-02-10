@@ -1,6 +1,6 @@
 {
   "name": "dewnote-app",
-  "productName": "dewnote",
+  "productName": "Dewnote",
   "version": "1.0.0",
   "description": "dewnote.com electron wrap",
   "main": "src/index.js",
