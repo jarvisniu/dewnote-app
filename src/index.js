@@ -1,27 +1,37 @@
-const {app, BrowserWindow, Menu} = require('electron')
-const os = require('os')
 
-const WINDOW_WIDTH = process.platform === 'darwin' ? 915 : 940
+const {app, BrowserWindow, Menu} = require('electron')
+const shell = require('electron').shell
+
+const isWin = process.platform === 'win32'
+const isMac = process.platform === 'darwin'
+const isLinux = process.platform === 'linux'
+
+const WINDOW_WIDTH = (isMac ? 915 : 940)
+
+let openDev = false
+// openDev = true // TODO 调试模式
 
 let mainWindow
 
 function createWindow () {
   mainWindow = new BrowserWindow({
     width: WINDOW_WIDTH,
-    height: 600,
-    icon: __dirname + os.platform === 'win32' ? '/logo.ico' : '/logo.png'
+    height: 600 + (openDev ? 300 : 0),
+    icon: __dirname + isWin ? '/logo.ico' : '/logo.png',
+    webPreferences: {
+      sandbox: true, // 必须这样才能获取到 window.open() 的返回值，目的看下面的注释
+    },
   })
-  mainWindow.loadURL('http://dewnote.com')
-  if (process.platform !== 'darwin') {
-    mainWindow.setMenu(null)
-  }
 
-  mainWindow.on('closed', function () {
+  if (isWin) mainWindow.setMenu(null)
+
+  mainWindow.on('closed', () => {
     mainWindow = null
   })
-  
+
   // Create the Application's main menu TO SUPPORT COPY/PASTE!
-  var template = [{
+  if (isMac) {
+    Menu.setApplicationMenu(Menu.buildFromTemplate([{
       label: "Application",
       submenu: [
           { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
@@ -38,17 +48,37 @@ function createWindow () {
           { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
           { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
       ]}
-  ];
+    ]))
+  }
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  mainWindow.loadURL('http://dewnote.com')
+
+  if (openDev) mainWindow.webContents.openDevTools({mode: 'bottom'})
 }
 
 app.on('ready', createWindow)
 
 app.on('window-all-closed', function () {
-  // if (process.platform !== 'darwin') {
   app.quit()
-  // }
+})
+
+/*
+hack: 使 monaco-editor 使用的下面这种点击链接功能生效:
+https://github.com/Microsoft/vscode/blob/master/src/vs/base/browser/dom.ts#L1147
+function windowOpenNoOpener (url) {
+  let newTab = window.open();
+  if (newTab) {
+      newTab.opener = null;
+      newTab.location.href = url;
+  }
+}
+*/
+app.on('browser-window-created', function (ev, win) {
+  win.webContents.on('will-navigate', function (ev, url) {
+    ev.preventDefault()
+    shell.openExternal(url)
+    win.close()
+  })
 })
 
 app.on('activate', function () {
