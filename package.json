@@ -6,10 +6,13 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "electron src",
-    "build:win": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.ico",
-    "build:mac": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.icns",
+    "package:mac": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.icns",
     "zip:mac": "ditto -c -k --sequesterRsrc --keepParent dist/Dewnote-darwin-x64/Dewnote.app dist/dewnote-mac.zip",
-    "zip:mac-too-large": "zip -r -5 dist/dewnote-mac.zip dist/Dewnote-darwin-x64/Dewnote.app"
+    "zip:mac-too-large": "zip -r -5 dist/dewnote-mac.zip dist/Dewnote-darwin-x64/Dewnote.app",
+    "build:mac": "npm run package:mac && npm run zip:mac",
+    "package:win": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.ico",
+    "zip:win": "mv dist/Dewnote-win32-x64 dist/dewnote-win-x64 && cd dist && zip -r -5 dewnote-win-x64.zip dewnote-win-x64",
+    "build:win": "npm run package:win && npm run zip:win"
   },
   "repository": {
     "type": "git",
