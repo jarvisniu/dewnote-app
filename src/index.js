@@ -6,7 +6,8 @@ const isWin = process.platform === 'win32'
 const isMac = process.platform === 'darwin'
 const isLinux = process.platform === 'linux'
 
-const WINDOW_WIDTH = (isMac ? 915 : 940)
+const WINDOW_WIDTH = (isMac ? 878 : 894)
+const WINDOW_HEIGHT = (isMac ? 612 : 629)
 
 let openDev = false
 // openDev = true // TODO 调试模式
@@ -16,7 +17,7 @@ let mainWindow
 function createWindow () {
   mainWindow = new BrowserWindow({
     width: WINDOW_WIDTH,
-    height: 600 + (openDev ? 300 : 0),
+    height: WINDOW_HEIGHT + (openDev ? 300 : 0),
     icon: __dirname + isWin ? '/logo.ico' : '/logo.png',
     webPreferences: {
       sandbox: true, // 必须这样才能获取到 window.open() 的返回值，目的看下面的注释
