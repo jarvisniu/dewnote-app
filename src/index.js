@@ -6,8 +6,8 @@ const isWin = process.platform === 'win32'
 const isMac = process.platform === 'darwin'
 const isLinux = process.platform === 'linux'
 
-const WINDOW_WIDTH = (isMac ? 878 : 894)
-const WINDOW_HEIGHT = (isMac ? 612 : 629)
+const WINDOW_WIDTH = (isMac ? 878 : (isLinux ? 880 : 894))
+const WINDOW_HEIGHT = (isMac ? 612 : (isLinux ? 590 : 629))
 
 let openDev = false
 // openDev = true // TODO 调试模式
@@ -25,6 +25,7 @@ function createWindow () {
   })
 
   if (isWin) mainWindow.setMenu(null)
+  else if (isLinux) mainWindow.setMenuBarVisibility(false)
 
   mainWindow.on('closed', () => {
     mainWindow = null
