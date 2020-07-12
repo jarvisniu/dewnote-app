@@ -1,7 +1,9 @@
 
 const {app, BrowserWindow, Menu} = require('electron')
 const shell = require('electron').shell
+const Store = require('electron-store')
 
+const store = new Store()
 const isWin = process.platform === 'win32'
 const isMac = process.platform === 'darwin'
 const isLinux = process.platform === 'linux'
@@ -12,23 +14,41 @@ const WINDOW_HEIGHT = (isMac ? 612 : (isLinux ? 590 : 629))
 let openDev = false
 // openDev = true // TODO 调试模式
 
-let mainWindow
+let win
 
 function createWindow () {
-  mainWindow = new BrowserWindow({
-    width: WINDOW_WIDTH,
-    height: WINDOW_HEIGHT + (openDev ? 300 : 0),
-    icon: __dirname + isWin ? '/logo.ico' : '/logo.png',
+
+  let width = store.get('mainWindowWidth') || WINDOW_WIDTH
+  let height = store.get('mainWindowHeight') || WINDOW_HEIGHT
+  let x = store.get('mainWindowX') || null
+  let y = store.get('mainWindowY') || null
+
+  win = new BrowserWindow({
+    width,
+    height,
+    x,
+    y,
+    icon: __dirname + (isWin ? '/logo.ico' : '/logo.png'),
     webPreferences: {
       sandbox: true, // 必须这样才能获取到 window.open() 的返回值，目的看下面的注释
     },
   })
 
-  if (isWin) mainWindow.setMenu(null)
-  else if (isLinux) mainWindow.setMenuBarVisibility(false)
+  if (isWin) win.setMenu(null)
+  else if (isLinux) win.setMenuBarVisibility(false)
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
+  function onResizeOrMove() {
+    const bounds = win.getBounds()
+    store.set('mainWindowWidth', bounds.width)
+    store.set('mainWindowHeight', bounds.height)
+    store.set('mainWindowX', bounds.x)
+    store.set('mainWindowY', bounds.y)
+  }
+  win.on('resize', onResizeOrMove)
+  win.on('moved', onResizeOrMove)
+
+  win.on('closed', () => {
+    win = null
   })
 
   // Create the Application's main menu TO SUPPORT COPY/PASTE!
@@ -53,9 +73,9 @@ function createWindow () {
     ]))
   }
 
-  mainWindow.loadURL('http://dewnote.com')
+  win.loadURL('http://dewnote.com')
 
-  if (openDev) mainWindow.webContents.openDevTools({mode: 'bottom'})
+  if (openDev) win.webContents.openDevTools({mode: 'bottom'})
 }
 
 app.on('ready', createWindow)
@@ -84,7 +104,7 @@ app.on('browser-window-created', function (ev, win) {
 })
 
 app.on('activate', function () {
-  if (mainWindow === null) {
+  if (win === null) {
     createWindow()
   }
 })
