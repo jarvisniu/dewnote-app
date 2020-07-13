@@ -45,7 +45,7 @@ function createWindow () {
     store.set('mainWindowY', bounds.y)
   }
   win.on('resize', onResizeOrMove)
-  win.on('moved', onResizeOrMove)
+  win.on('move', onResizeOrMove)
 
   win.on('closed', () => {
     win = null

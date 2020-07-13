@@ -11,8 +11,9 @@
     "zip:mac-too-large": "zip -r -5 dist/dewnote-mac.zip dist/Dewnote-darwin-x64/Dewnote.app",
     "build:mac": "npm run package:mac && npm run zip:mac",
     "package:win": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.ico",
-    "build:debian": "ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager . --overwrite --asar --out dist --icon src/logo.png --arch x64 --executableName dewnote-app",
+    "compile:debian": "ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager . --overwrite --asar --out dist --icon src/logo.png --arch x64 --executableName dewnote-app",
     "package:debian": "electron-installer-debian --src dist/Dewnote-linux-x64/ --dest dist/installers/ --arch amd64 --icon src/logo.png",
+    "build:debian": "npm run compile:debian && npm run package:debian",
     "zip:win": "mv dist/Dewnote-win32-x64 dist/dewnote-win-x64 && cd dist && zip -r -5 dewnote-win-x64.zip dewnote-win-x64",
     "build:win": "npm run package:win && npm run zip:win"
   },
@@ -33,7 +34,9 @@
   "homepage": "https://github.com/jarvisniu/dewnote-app#readme",
   "devDependencies": {
     "electron": "^9.1.0",
-    "electron-packager": "^14.2.1",
+    "electron-packager": "^14.2.1"
+  },
+  "dependencies": {
     "electron-store": "^5.2.0"
   }
 }
