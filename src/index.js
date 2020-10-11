@@ -37,6 +37,7 @@ function createWindow () {
   if (isWin) win.setMenu(null)
   else if (isLinux) win.setMenuBarVisibility(false)
 
+  // TODO: Save which screen https://github.com/electron/electron/blob/master/docs/api/screen.md
   function onResizeOrMove() {
     const bounds = win.getBounds()
     store.set('mainWindowWidth', bounds.width)
