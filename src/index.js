@@ -1,9 +1,8 @@
 
-const {app, BrowserWindow, Menu} = require('electron')
+const {app, screen, BrowserWindow, Menu} = require('electron')
 const shell = require('electron').shell
-const Store = require('electron-store')
+const windowStateKeeper = require('electron-window-state')
 
-const store = new Store()
 const isWin = process.platform === 'win32'
 const isMac = process.platform === 'darwin'
 const isLinux = process.platform === 'linux'
@@ -17,36 +16,25 @@ let openDev = false
 let win
 
 function createWindow () {
-
-  let width = store.get('mainWindowWidth') || WINDOW_WIDTH
-  let height = store.get('mainWindowHeight') || WINDOW_HEIGHT
-  let x = store.get('mainWindowX') || null
-  let y = store.get('mainWindowY') || null
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: WINDOW_WIDTH,
+    defaultHeight: WINDOW_HEIGHT,
+  })
 
   win = new BrowserWindow({
-    width,
-    height,
-    x,
-    y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
     icon: __dirname + (isWin ? '/logo.ico' : '/logo.png'),
     webPreferences: {
       sandbox: true, // 必须这样才能获取到 window.open() 的返回值，目的看下面的注释
     },
   })
 
+  mainWindowState.manage(win)
   if (isWin) win.setMenu(null)
   else if (isLinux) win.setMenuBarVisibility(false)
-
-  // TODO: Save which screen https://github.com/electron/electron/blob/master/docs/api/screen.md
-  function onResizeOrMove() {
-    const bounds = win.getBounds()
-    store.set('mainWindowWidth', bounds.width)
-    store.set('mainWindowHeight', bounds.height)
-    store.set('mainWindowX', bounds.x)
-    store.set('mainWindowY', bounds.y)
-  }
-  win.on('resize', onResizeOrMove)
-  win.on('move', onResizeOrMove)
 
   win.on('closed', () => {
     win = null
@@ -98,6 +86,7 @@ function windowOpenNoOpener (url) {
 */
 app.on('browser-window-created', function (ev, win) {
   win.webContents.on('will-navigate', function (ev, url) {
+    if (url.includes('dewnote.niujunwei.com')) return
     ev.preventDefault()
     shell.openExternal(url)
     win.close()
