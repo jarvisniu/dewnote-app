@@ -62,7 +62,7 @@ function createWindow () {
     ]))
   }
 
-  win.loadURL('http://dewnote.com')
+  win.loadURL('https://dewnote.niujunwei.com')
 
   if (openDev) win.webContents.openDevTools({mode: 'bottom'})
 }
