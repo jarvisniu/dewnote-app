@@ -1,7 +1,12 @@
-
-const {app, screen, BrowserWindow, Menu} = require('electron')
+const { app, BrowserWindow } = require('electron')
 const shell = require('electron').shell
 const windowStateKeeper = require('electron-window-state')
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (require('electron-squirrel-startup')) {
+  // eslint-disable-line global-require
+  app.quit()
+}
 
 const isWin = process.platform === 'win32'
 const isMac = process.platform === 'darwin'
@@ -9,24 +14,26 @@ const isLinux = process.platform === 'linux'
 
 const WINDOW_WIDTH = (isMac ? 878 : (isLinux ? 880 : 894))
 const WINDOW_HEIGHT = (isMac ? 612 : (isLinux ? 590 : 629))
+const HOMEPAGE = 'https://dewnote.niujunwei.com'
 
 let openDev = false
 // openDev = true // TODO 调试模式
 
 let win
 
-function createWindow () {
+const createWindow = () => {
   let mainWindowState = windowStateKeeper({
     defaultWidth: WINDOW_WIDTH,
     defaultHeight: WINDOW_HEIGHT,
   })
 
+  // Create the browser window.
   win = new BrowserWindow({
     width: mainWindowState.width,
     height: mainWindowState.height,
     x: mainWindowState.x,
     y: mainWindowState.y,
-    icon: __dirname + (isWin ? '/logo.ico' : '/logo.png'),
+    icon: __dirname + (isWin ? '/assets/logo.ico' : '/assets/logo.png'),
     webPreferences: {
       sandbox: true, // 必须这样才能获取到 window.open() 的返回值，目的看下面的注释
     },
@@ -62,38 +69,27 @@ function createWindow () {
     ]))
   }
 
-  win.loadURL('https://dewnote.niujunwei.com')
+  win.loadURL(HOMEPAGE)
 
-  if (openDev) win.webContents.openDevTools({mode: 'bottom'})
+  if (openDev) win.webContents.openDevTools()
 }
 
 app.on('ready', createWindow)
 
-app.on('window-all-closed', function () {
-  app.quit()
-})
-
-/*
-hack: 使 monaco-editor 使用的下面这种点击链接功能生效:
-https://github.com/Microsoft/vscode/blob/master/src/vs/base/browser/dom.ts#L1147
-function windowOpenNoOpener (url) {
-  let newTab = window.open();
-  if (newTab) {
-      newTab.opener = null;
-      newTab.location.href = url;
-  }
-}
-*/
 app.on('browser-window-created', function (ev, win) {
   win.webContents.on('will-navigate', function (ev, url) {
-    if (url.includes('dewnote.niujunwei.com')) return
+    if (url.startsWith(HOMEPAGE)) return
     ev.preventDefault()
     shell.openExternal(url)
     win.close()
   })
 })
 
-app.on('activate', function () {
+app.on('window-all-closed', () => {
+  app.quit()
+})
+
+app.on('activate', () => {
   if (win === null) {
     createWindow()
   }

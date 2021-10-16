@@ -1,45 +1,69 @@
 {
-  "name": "dewnote-app",
+  "name": "Dewnote",
   "productName": "Dewnote",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "dewnote.com electron wrap",
   "main": "src/index.js",
   "scripts": {
-    "dev": "electron src",
-    "package:mac": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.icns",
-    "zip:mac": "ditto -c -k --sequesterRsrc --keepParent dist/Dewnote-darwin-x64/Dewnote.app dist/dewnote-mac.zip",
-    "zip:mac-too-large": "zip -r -5 dist/dewnote-mac.zip dist/Dewnote-darwin-x64/Dewnote.app",
-    "build:mac": "npm run package:mac && npm run zip:mac",
-    "package:win": "electron-packager . --overwrite --asar --out=dist --icon=src/logo.ico",
-    "compile:debian": "ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-packager . --overwrite --asar --out dist --icon src/logo.png --arch x64 --executableName dewnote-app",
-    "package:debian": "electron-installer-debian --src dist/Dewnote-linux-x64/ --dest dist/installers/ --arch amd64 --icon src/logo.png",
-    "build:debian": "npm run compile:debian && npm run package:debian",
-    "zip:win": "mv dist/Dewnote-win32-x64 dist/dewnote-win-x64 && cd dist && zip -r -5 dewnote-win-x64.zip dewnote-win-x64",
-    "build:win": "npm run package:win && npm run zip:win"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jarvisniu/dewnote-app.git"
+    "start": "electron-forge start",
+    "package": "ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-forge package",
+    "make": "ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-forge make",
+    "publish": "electron-forge publish"
   },
   "keywords": [
     "dewnote",
     "electron",
     "app"
   ],
-  "author": "Jarvis Niu",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jarvisniu/dewnote-app/issues"
+  "author": {
+    "name": "Jarvis Niu",
+    "email": "jarvisniu@gmail.com"
   },
-  "homepage": "https://github.com/jarvisniu/dewnote-app#readme",
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "appname": "Dewnote",
+        "icon": "./src/assets/logo"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "Dewnote"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "options": {
+              "icon": "./src/assets/logo.png"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3"
   },
   "devDependencies": {
-    "electron": "^10.1.3",
-    "electron-packager": "^14.2.1"
-  },
-  "optionalDependencies": {
-    "electron-installer-debian": "^3.1.0"
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
+    "@electron-forge/maker-zip": "^6.0.0-beta.61",
+    "electron": "15.2.0"
   }
 }
