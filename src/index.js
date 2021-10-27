@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 const shell = require('electron').shell
 const windowStateKeeper = require('electron-window-state')
 
@@ -50,21 +50,21 @@ const createWindow = () => {
   // Create the Application's main menu TO SUPPORT COPY/PASTE!
   if (isMac) {
     Menu.setApplicationMenu(Menu.buildFromTemplate([{
-      label: "Application",
+      label: "应用",
       submenu: [
-          { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+          { label: "关于", selector: "orderFrontStandardAboutPanel:" },
           { type: "separator" },
-          { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+          { label: "退出", accelerator: "Command+Q", click: function() { app.quit(); }}
       ]}, {
-      label: "Edit",
+      label: "编辑",
       submenu: [
-          { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-          { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+          { label: "撤销", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+          { label: "重做", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
           { type: "separator" },
-          { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-          { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-          { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-          { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+          { label: "剪切", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+          { label: "复制", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+          { label: "粘贴", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+          { label: "全选", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
       ]}
     ]))
   }
