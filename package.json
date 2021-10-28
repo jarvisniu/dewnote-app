@@ -30,7 +30,8 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "Dewnote"
+            "name": "Dewnote",
+            "iconUrl": "http://cdn.niujunwei.com/dewnote/favicon.ico"
           }
         },
         {
